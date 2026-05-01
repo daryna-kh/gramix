@@ -31,8 +31,10 @@ async function getAuth(val: FieldType) {
 export const LoginPage = () => {
   const [form] = Form.useForm<FieldType>();
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    const emailTest = emailRegex.test(values.email);
+    const passwordTest = passwordRegex.test(values.password);
     try {
-      if (!emailRegex.test(values.email)) {
+      if (!emailTest) {
         form.setFields([
           {
             name: "email",
@@ -41,7 +43,7 @@ export const LoginPage = () => {
         ]);
       }
 
-      if (!passwordRegex.test(values.password)) {
+      if (!passwordTest) {
         form.setFields([
           {
             name: "password",
@@ -49,6 +51,7 @@ export const LoginPage = () => {
           },
         ]);
       }
+      // if (!emailTest || !passwordTest) return;
       const { remember, ...val } = values;
       const response = await getAuth(val);
     } catch (error) {

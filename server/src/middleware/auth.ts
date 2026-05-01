@@ -6,9 +6,15 @@ export function authMiddleware(
   res: Response,
   next: NextFunction,
 ) {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies?.refreshToken;
   if (!token) return res.status(401).json({ error: "Unauthorized" });
-
-  req.user = jwt.verify(token, process.env.JWT_SECRET!);
-  next();
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: string;
+    };
+    req.user = { userId: payload.userId };
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Invalid token" });
+  }
 }

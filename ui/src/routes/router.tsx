@@ -9,11 +9,7 @@ import { isAuthenticated } from "./tools";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: isAuthenticated() ? (
-      <ChatList />
-    ) : (
-      <Navigate to="/login" replace />
-    ),
+    element: isAuthenticated ? <ChatList /> : <Navigate to="/login" replace />,
   },
   {
     path: "/login",
