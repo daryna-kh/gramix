@@ -10,6 +10,7 @@ import {
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "antd/es/typography/Link";
 import { emailRegex, passwordRegex } from "../constants";
+import { api } from "../api/api";
 
 const { Title, Text } = Typography;
 type FieldType = {
@@ -17,6 +18,15 @@ type FieldType = {
   password: string;
   remember?: "true" | "false";
 };
+
+async function getAuth(val: FieldType) {
+  try {
+    const response = await api.post<FieldType>("/auth/login", val);
+    return response;
+  } catch (err) {
+    console.warn(err);
+  }
+}
 
 export const LoginPage = () => {
   const [form] = Form.useForm<FieldType>();
@@ -39,6 +49,8 @@ export const LoginPage = () => {
           },
         ]);
       }
+      const { remember, ...val } = values;
+      const response = await getAuth(val);
     } catch (error) {
       console.warn(error);
     }
