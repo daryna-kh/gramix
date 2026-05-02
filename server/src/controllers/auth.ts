@@ -10,7 +10,7 @@ export function auth(
       const token = await fn(req.body);
       res.cookie("refreshToken", token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
@@ -30,7 +30,7 @@ export function refreshToken(req: Request, res: Response, next: NextFunction) {
     });
     res.cookie("refreshToken", newToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });

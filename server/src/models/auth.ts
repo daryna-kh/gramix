@@ -14,7 +14,7 @@ export async function registerUser(data: { email: string; password: string }) {
     data: { ...data, password: hashed },
   });
 
-  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
+  return jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 }
@@ -26,7 +26,7 @@ export async function loginUser(data: { email: string; password: string }) {
   const passwordIsValid = await bcrypt.compare(data.password, user.password);
   if (!passwordIsValid) throw new AppError("Invalid password", 401);
 
-  return jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET!, {
+  return jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 }
