@@ -1,13 +1,12 @@
 import { useContext, type ReactNode } from "react";
-import { Navigate } from "react-router";
 import { AuthContext } from "../context/auth/AuthContext";
 import { ScreenLoader } from "../components/ScreenLoader";
-// import { AuthContext } from "../context/auth/AuthProvider";
+import { Navigate } from "react-router";
 
-export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+export const PublicRoute = ({ children }: { children: ReactNode }) => {
   const auth = useContext(AuthContext);
   if (!auth) return <ScreenLoader />;
   if (auth.isAuth === null) return <ScreenLoader />;
-  if (auth.isAuth === false) return <Navigate to="/login" replace />;
+  if (auth.isAuth === true) return <Navigate to="/list" replace />;
   return children;
 };

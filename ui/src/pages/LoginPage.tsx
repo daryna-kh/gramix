@@ -1,16 +1,17 @@
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import {
-  Form,
-  Input,
   Button,
   Card,
+  Checkbox,
+  Form,
+  Input,
   Typography,
   type FormProps,
-  Checkbox,
 } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import Link from "antd/es/typography/Link";
-import { emailRegex, passwordRegex } from "../constants";
+import { useNavigate } from "react-router";
 import { api } from "../api/api";
+import { emailRegex, passwordRegex } from "../constants";
 
 const { Title, Text } = Typography;
 type FieldType = {
@@ -29,6 +30,7 @@ async function getAuth(val: FieldType) {
 }
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm<FieldType>();
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     const emailTest = emailRegex.test(values.email);
@@ -54,6 +56,9 @@ export const LoginPage = () => {
       // if (!emailTest || !passwordTest) return;
       const { remember, ...val } = values;
       const response = await getAuth(val);
+      if (response?.status === 200) {
+        navigate("/list", { replace: true });
+      }
     } catch (error) {
       console.warn(error);
     }

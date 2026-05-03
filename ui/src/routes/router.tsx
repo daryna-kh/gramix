@@ -1,26 +1,32 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { ScreenLoader } from "../components/ScreenLoader";
 import { ChatList } from "../pages/ChatList";
 import { ErrorPage } from "../pages/ErrorPage";
+import { LoginPage } from "../pages/LoginPage";
 import { RegisterPage } from "../pages/RegisterPage";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { isAuthenticated } from "./tools";
+import { PublicRoute } from "./PublicRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: isAuthenticated ? <ChatList /> : <Navigate to="/login" replace />,
+    element: <Navigate to="/list" replace />,
   },
   {
     path: "/login",
     errorElement: <ErrorPage />,
-    lazy: () =>
-      import("../pages/LoginPage").then((m) => ({ Component: m.LoginPage })),
-    hydrateFallbackElement: <ScreenLoader />,
+    element: (
+      <PublicRoute>
+        <LoginPage />
+      </PublicRoute>
+    ),
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: (
+      <PublicRoute>
+        <RegisterPage />
+      </PublicRoute>
+    ),
   },
   {
     path: "/list",
@@ -32,6 +38,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/list" replace />,
   },
 ]);
